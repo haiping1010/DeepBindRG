@@ -49,5 +49,9 @@ check the out_file.csv
 
 Citation：
 DeepBindRG: a deep learning based method for estimating effective protein-ligand affinity
+
+
+If there is any technique problem, please no hestitated to contact by email hp.zhang@siat.ac.cn.
+
  
 

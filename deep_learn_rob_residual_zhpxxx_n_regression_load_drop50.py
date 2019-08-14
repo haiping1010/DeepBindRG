@@ -78,7 +78,7 @@ def loadlabel(path):
     t = np.loadtxt(newname,dtype=np.float)
     return t
 
-
+all_name=[]
 index=0
 for name in glob.glob(data_path):
     #print(name)
@@ -87,6 +87,7 @@ for name in glob.glob(data_path):
     data_samples[index,:,:] = t2
     data_labels.append(t3)
     index=index+1
+    all_name.append(name)
 
 data_labels=np.array(data_labels)
 print(data_samples.shape)
@@ -112,10 +113,6 @@ with h5py.File('label_aa1000_n.h5', 'r') as hf:
     data_labels = hf['name-of-dataset2'][:]
 '''
 
-num_begin=12018
-num_end=14018
-#num_begin=2000
-#num_end=4000
 
 val_data_samples = data_samples[:, :, :]
 val_data_labels = data_labels[:]
@@ -127,22 +124,6 @@ Y_val = val_data_labels.reshape(val_data_labels.shape[0],  1)
 
 	
 #*************************************jupyter_notebook*****************************************
-model = ResNet50(input_shape = (row_size, col_size, 1))
-
-model.summary()
-
-optimizer = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
-###
-###ategorical_crossentropy
-model.compile(optimizer = optimizer , loss = "mse", metrics=['mse','mae'])
-#model.compile(optimizer = optimizer , loss = "binary_crossentropy", metrics=["accuracy"])
-learning_rate_reduction = ReduceLROnPlateau(monitor='val_acc', 
-                                            patience=3, 
-                                            verbose=1, 
-                                            factor=0.5, 
-                                            min_lr=0.00001)
-#epochs = 60
-batch_size = 64
 
 ##history = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, verbose = 120, validation_data = (X_test, Y_test), callbacks = [learning_rate_reduction])
 ##model.save("model_resnet_n_epoch60_linear_drop50.h5")
@@ -156,11 +137,11 @@ from sklearn import metrics
 
 y_pred = model.predict(X_val)
 
-print (Y_val[0:20], y_pred[0:20])
+#print (Y_val[0:20], y_pred[0:20])
 fw=open('out.csv','w')
 for i in range(Y_val.shape[0]):
-     print (Y_val[i][0], y_pred[i][0])
-     fw.write(str(Y_val[i][0]) +"  "+ str(y_pred[i][0]))
+     #print (Y_val[i][0], y_pred[i][0])
+     fw.write( all_name[i] + "  "+ str(Y_val[i][0]) +"  "+ str(y_pred[i][0]))
      fw.write('\n')
 def coeff_determination(y_true, y_pred):
     SS_res =  np.sum(np.square( y_true-y_pred ))
@@ -194,11 +175,9 @@ def pearson_def(x, y):
 from scipy.stats import linregress
 print (Y_val.shape,y_pred.shape)
 print ('R square first:', linregress(np.reshape(Y_val,Y_val.shape[0]), np.reshape(y_pred,y_pred.shape[0])))
-print (np.mean(y_pred))
+#print (np.mean(y_pred))
 print('R square second:' ,  pearson_def(Y_val, y_pred))
 
-from sklearn.metrics import r2_score
-print('R square:' ,  r2_score(Y_val, y_pred))
 
 print( 'MAE: ',   metrics.mean_absolute_error(Y_val, y_pred))
 
@@ -214,9 +193,9 @@ slope, intercept, r_value, p_value, std_err=stats.linregress(Y_val.flatten(),y_p
 
 from math import sqrt
 
-print Y_val.flatten(),y_pred.flatten()
+#print Y_val.flatten(),y_pred.flatten()
 summary=np.sum(np.square(Y_val.flatten()-(y_pred.flatten()*slope+intercept)))
-print (Y_val.shape[0])
+#print (Y_val.shape[0])
 print (Y_val.shape[0])
 SD=sqrt(summary/(Y_val.shape[0]-1))
 print ('SD:' , SD)

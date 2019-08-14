@@ -1,5 +1,40 @@
+prerequirment:
 
-all_data/2i0d_processed.pdb_learn_aa1000_0.4.txt  12.1  7.139397  4.96060286
-all_data/1duv_processed.pdb_learn_aa1000_0.4.txt  11.8  6.4939103  5.30608969
-all_data/1swk_processed.pdb_learn_aa1000_0.4.txt  12.  5.6333094  6.36669064
-all_data/2c1q_processed.pdb_learn_aa1000_0.4.txt  13.  5.4396386  7.56036139
+anaconda python 2.7
+tensorflow
+keras
+scklearn
+numpy
+pandas
+
+
+
+##################
+#################
+For testing cases that have experimental value
+step 1:
+unzip the all_data/data.zip, by cd all_data; unzip data.zip
+
+step 2:
+got the performance estimator(r value, rmse, etc) by:
+python deep_learn_rob_residual_zhpxxx_n_regression_load_drop50.py
+
+
+step 3:
+list the vina score, the DeepBindRG prediction value, and the experimental value
+(all_energies.sort is the output file from vina docking)
+python perform_vina.py
+
+check the output file  out_list.csv
+
+collumn 1-4 are :
+name,experiment value, DeepBindRG value, Vina value
+
+############################
+############################
+For application cases that have no experimental value:
+
+python deep_learn_rob_residual_zhpxxx_n_regression_load_drop50_use.py
+
+check the out_file.csv
+
